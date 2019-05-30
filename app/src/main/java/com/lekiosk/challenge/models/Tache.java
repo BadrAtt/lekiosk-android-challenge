@@ -1,5 +1,7 @@
 package com.lekiosk.challenge.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Badr Elattaoui
  * on 30/05/2019.
@@ -7,8 +9,11 @@ package com.lekiosk.challenge.models;
 
 public class Tache {
 
+    @SerializedName("id")
     private int mId;
+    @SerializedName("title")
     private String mTitle;
+    @SerializedName("completed")
     private boolean mCompleted;
 
     public int getmId() {

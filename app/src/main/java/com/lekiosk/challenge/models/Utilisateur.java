@@ -1,5 +1,7 @@
 package com.lekiosk.challenge.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Badr Elattaoui
  * on 30/05/2019.
@@ -7,9 +9,13 @@ package com.lekiosk.challenge.models;
 
 public class Utilisateur {
 
+    @SerializedName("id")
     private int mId;
+    @SerializedName("name")
     private String mName;
+    @SerializedName("username")
     private String mUserName;
+    @SerializedName("email")
     private String mEmail;
 
     public int getmId() {
