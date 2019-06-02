@@ -27,6 +27,10 @@ public interface HomeContract {
         void hideProgress();
         void setDataToRecyclerView(List<Utilisateur> usersList);
         void displayNetworkError(String message);
+
+        interface onRecyclerItemClickListener{
+            void onItemClick(int userId);
+        }
     }
 
     interface HomePresenter{

@@ -20,11 +20,13 @@ import java.util.List;
 public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.UserViewHolder> {
 
     private List<Utilisateur> mUsersList;
+    private HomeContract.HomeView.onRecyclerItemClickListener clickListener;
 
-    public UsersListAdapter(List<Utilisateur> mUsersList) {
+
+    public UsersListAdapter(List<Utilisateur> mUsersList, HomeContract.HomeView.onRecyclerItemClickListener clickListener) {
         this.mUsersList = mUsersList;
+        this.clickListener = clickListener;
     }
-
 
     @NonNull
     @Override
@@ -56,10 +58,16 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.User
 
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
-
             mName  = itemView.findViewById(R.id.name);
             mUserName  = itemView.findViewById(R.id.username);
             mEmail = itemView.findViewById(R.id.email);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickListener.onItemClick(getAdapterPosition());
+                }
+            });
         }
     }
 }

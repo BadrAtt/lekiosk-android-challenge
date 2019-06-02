@@ -2,6 +2,7 @@ package com.lekiosk.challenge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.lekiosk.challenge.ui.home.HomeFragment;
 
@@ -25,7 +26,7 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
 
 
     @Override
-    public void onHomeFragmentInteraction() {
-
+    public void getUserTasks(int userId) {
+        Toast.makeText(this, "user Clicked", Toast.LENGTH_SHORT).show();
     }
 }

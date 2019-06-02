@@ -19,7 +19,7 @@ import com.lekiosk.challenge.models.Utilisateur;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements HomeContract.HomeView {
+public class HomeFragment extends Fragment implements HomeContract.HomeView, HomeContract.HomeView.onRecyclerItemClickListener {
 
     private OnHomeFragmentInteractionListener mListener;
 
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView {
 
     @Override
     public void setDataToRecyclerView(List<Utilisateur> usersList) {
-        mAdapter = new UsersListAdapter(usersList);
+        mAdapter = new UsersListAdapter(usersList, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mUsersRecyClerView.setLayoutManager(linearLayoutManager);
         mUsersRecyClerView.setAdapter(mAdapter);
@@ -101,7 +101,12 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onItemClick(int userId) {
+        mListener.getUserTasks(userId);
+    }
+
     public interface OnHomeFragmentInteractionListener {
-        void onHomeFragmentInteraction();
+        void getUserTasks(int userId);
     }
 }

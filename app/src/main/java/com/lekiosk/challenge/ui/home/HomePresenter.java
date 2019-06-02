@@ -13,9 +13,9 @@ import retrofit2.Response;
 
 public class HomePresenter implements HomeContract.HomePresenter, HomeContract.HomeModel.onFinishListener {
 
-    HomeContract.HomeModel mHomeModel;
-    HomeContract.HomeView mHomeView;
-    List<Utilisateur> mUsersList;
+    private HomeContract.HomeModel mHomeModel;
+    private HomeContract.HomeView mHomeView;
+    private List<Utilisateur> mUsersList;
 
     public HomePresenter(HomeContract.HomeModel mHomeModel, HomeContract.HomeView mHomeView) {
         this.mHomeModel = mHomeModel;
