@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Lekiosk Challenge</string>
+    <string name="dash_separator">-</string>
 </resources>
