@@ -76,6 +76,10 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView, Hom
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mAdapter = null;
+        mHomePresenter = null;
+        mLoadingProgress = null;
+        mUsersRecyClerView = null;
     }
 
     @Override

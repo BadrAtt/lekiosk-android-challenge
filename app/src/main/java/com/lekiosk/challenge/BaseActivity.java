@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.lekiosk.challenge.ui.home.HomeFragment;
+import com.lekiosk.challenge.ui.tasks.TasksFragment;
 
 public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener {
 
@@ -27,6 +28,9 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     @Override
     public void getUserTasks(int userId) {
-        Toast.makeText(this, "user Clicked", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.base_container, TasksFragment.newInstance(userId))
+                .commit();
     }
 }
