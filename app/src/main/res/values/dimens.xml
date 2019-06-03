@@ -4,4 +4,5 @@
     <dimen name="standard_10">10dp</dimen>
     <dimen name="standard_5">5dp</dimen>
     <dimen name="standard_20">20dp</dimen>
+    <dimen name="standard_0">0dp</dimen>
 </resources>

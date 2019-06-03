@@ -65,7 +65,7 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.User
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickListener.onItemClick(getAdapterPosition());
+                    clickListener.onItemClick(getAdapterPosition() + 1);
                 }
             });
         }

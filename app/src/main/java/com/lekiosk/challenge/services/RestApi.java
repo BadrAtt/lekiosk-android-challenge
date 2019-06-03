@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Badr Elattaoui
@@ -20,6 +21,6 @@ public interface RestApi {
     @GET("/users/")
     Call<List<Utilisateur>> getUsers();
 
-    @GET("/todos?userId={id}")
-    Call<ResponseBody> getTodos(@Path("id") int userId);
+    @GET("/todos")
+    Call<List<Tache>> getTodos(@Query("userId") int userId);
 }
