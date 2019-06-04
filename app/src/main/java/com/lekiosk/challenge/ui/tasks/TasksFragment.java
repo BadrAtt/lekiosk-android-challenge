@@ -25,22 +25,25 @@ public class TasksFragment extends Fragment implements TasksContract.TasksView, 
 
     private int mUserId;
     private static final String USER_ID_TAG = "userId";
+    private static final String TABLET_MODE_TAG = "tablet";
     private RecyclerView mTasksRecycler;
     private ProgressBar mLoadingProgress;
     private TasksListAdapter mAdapter;
     private TasksPresenter mTasksPresenter;
     private OnTaskFragmentInteraction mListener;
     private ImageView mBtnBack;
+    private View mParentView;
 
     public TasksFragment() {
         // Required empty public constructor
     }
 
-    public static TasksFragment newInstance(int userId) {
+    public static TasksFragment newInstance(int userId, boolean isTabletMod) {
 
         TasksFragment tasksFragment = new TasksFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(USER_ID_TAG, userId);
+        arguments.putBoolean(TABLET_MODE_TAG, isTabletMod);
         tasksFragment.setArguments(arguments);
 
         return tasksFragment;
@@ -52,6 +55,7 @@ public class TasksFragment extends Fragment implements TasksContract.TasksView, 
         if (getArguments() != null) {
             mUserId = getArguments().getInt(USER_ID_TAG);
         }
+        setRetainInstance(true);
     }
 
     @Override
@@ -64,19 +68,28 @@ public class TasksFragment extends Fragment implements TasksContract.TasksView, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(view);
+        mParentView = view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView(mParentView);
         mTasksPresenter = new TasksPresenter(this, new TasksModel());
         mTasksPresenter.getUsersTasks(mUserId);
     }
 
-
-
     private void initView(View parent){
-
         mTasksRecycler = parent.findViewById(R.id.tasks_recycler);
         mLoadingProgress  = parent.findViewById(R.id.loading_progress);
         mBtnBack = parent.findViewById(R.id.btn_back);
-        mBtnBack.setOnClickListener(this);
+
+        if(getArguments() != null && getArguments().getBoolean(TABLET_MODE_TAG)){
+            mBtnBack.setVisibility(View.GONE);
+        }
+        else {
+            mBtnBack.setOnClickListener(this);
+        }
     }
 
     @Override

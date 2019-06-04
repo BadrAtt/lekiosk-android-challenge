@@ -27,6 +27,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView, Hom
     private RecyclerView mUsersRecyClerView;
     private HomePresenter mHomePresenter;
     private UsersListAdapter mAdapter;
+    private View mParentView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,7 +52,13 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView, Hom
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(view);
+        mParentView  = view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView(mParentView);
         mHomePresenter = new HomePresenter(new HomeModel(), this);
         mHomePresenter.getDataFromServer();
     }

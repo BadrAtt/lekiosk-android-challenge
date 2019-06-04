@@ -1,5 +1,7 @@
 package com.lekiosk.challenge;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -12,14 +14,37 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     private HomeFragment homeFragment;
     private TasksFragment tasksFragment;
-    private final String HOME_FRAGMENT_TAG = "HOMEFRAGMENT";
-    private final String TASKS_FRAGMENT_TAG = "TASKSFRAGMENT";
+    private final String HOME_FRAGMENT_TAG = HomeFragment.class.getCanonicalName();
+    private final String TASKS_FRAGMENT_TAG = TasksFragment.class.getCanonicalName();
+    private boolean mIsTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        initView();
+
+        mIsTablet = findViewById(R.id.layout_tab) !=null;
+        if(mIsTablet){
+            initTabletView();
+        }
+        else {
+            initView();
+        }
+
+        if (getCurrentFragment() != null) {
+            //if screen rotated retain Fragment
+            changeFragmentTo(getCurrentFragment(), getCurrentFragment().getTag());
+
+        }
+    }
+
+
+    private void initTabletView(){
+        homeFragment = HomeFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.base_users_container, homeFragment)
+                .commit();
     }
 
     //init our view with the HomeFragment
@@ -35,23 +60,52 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     @Override
     public void getUserTasks(int userId) {
-        tasksFragment = TasksFragment.newInstance(userId);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.base_container, tasksFragment)
-                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_in_left)
-                .addToBackStack(TASKS_FRAGMENT_TAG)
-                .commit();
+
+        if(!mIsTablet){
+            tasksFragment = TasksFragment.newInstance(userId,  false);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.base_container, tasksFragment)
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(TASKS_FRAGMENT_TAG)
+                    .commit();
+        }
+        else {
+            tasksFragment = TasksFragment.newInstance(userId,  true);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.base_tasks_container, tasksFragment)
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+        }
+    }
+
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id
+                .base_container);
+    }
+
+    public void changeFragmentTo(Fragment fragmentToLoad, String fragmentTag) {
+
+        if (getSupportFragmentManager().findFragmentByTag(fragmentTag) == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.base_container, fragmentToLoad, fragmentTag)
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(fragmentTag)
+                    .commit();
+
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.base_container, fragmentToLoad, fragmentTag)
+                    .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+        }
     }
 
     @Override
     public void onTaskFragmentBackPressed() {
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .remove(tasksFragment)
-//                .replace(R.id.base_container, homeFragment)
-//                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right)
-//                .commit();
 
         getSupportFragmentManager().popBackStack();
     }
