@@ -1,10 +1,9 @@
 package com.lekiosk.challenge;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.lekiosk.challenge.ui.home.HomeFragment;
 import com.lekiosk.challenge.ui.tasks.TasksFragment;
@@ -38,6 +37,10 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     private void initTabletView(){
         homeFragment = HomeFragment.newInstance();

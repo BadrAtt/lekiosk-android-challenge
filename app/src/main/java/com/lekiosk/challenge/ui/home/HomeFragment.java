@@ -13,13 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.lekiosk.challenge.App;
 import com.lekiosk.challenge.R;
 import com.lekiosk.challenge.models.Utilisateur;
 
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements HomeContract.HomeView, HomeContract.HomeView.onRecyclerItemClickListener {
+public class HomeFragment extends Fragment implements HomeContract.HomeView,
+        HomeContract.HomeView.onRecyclerItemClickListener {
 
     private OnHomeFragmentInteractionListener mListener;
 
@@ -60,7 +62,13 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView, Hom
         super.onResume();
         initView(mParentView);
         mHomePresenter = new HomePresenter(new HomeModel(), this);
-        mHomePresenter.getDataFromServer();
+
+        if(App.isConnected(App.getmAppContext())){//fetch data from remote
+            mHomePresenter.getDataFromServer();
+        }
+        else { //get offline data from sqlite
+            mHomePresenter.getOfflineData();
+        }
     }
 
     private void initView(View parent){
@@ -116,6 +124,7 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView, Hom
     public void onItemClick(int userId) {
         mListener.getUserTasks(userId);
     }
+
 
     public interface OnHomeFragmentInteractionListener {
         void getUserTasks(int userId);

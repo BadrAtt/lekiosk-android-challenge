@@ -2,6 +2,7 @@ package com.lekiosk.challenge.ui.home;
 
 import android.support.annotation.NonNull;
 
+import com.lekiosk.challenge.db.DbClient;
 import com.lekiosk.challenge.models.Utilisateur;
 import com.lekiosk.challenge.services.ApiClient;
 import com.lekiosk.challenge.services.RestApi;
@@ -26,6 +27,16 @@ public class HomeModel implements HomeContract.HomeModel {
             @Override
             public void onResponse(@NonNull Call<List<Utilisateur>> call, @NonNull Response<List<Utilisateur>> response) {
                 listener.onSuccessResponse(response);
+
+                if(response.body() !=null){
+                    for (Utilisateur utilisateur : response.body()){
+                        try {
+                            DbClient.getmDbHelper().insertUser(utilisateur);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -33,5 +44,10 @@ public class HomeModel implements HomeContract.HomeModel {
                 listener.onFailureResponse(t);
             }
         });
+    }
+
+    @Override
+    public void getSqLiteData(SqliteListener listener) {
+        listener.onGetAll(DbClient.getmDbHelper().getAllUsers());
     }
 }

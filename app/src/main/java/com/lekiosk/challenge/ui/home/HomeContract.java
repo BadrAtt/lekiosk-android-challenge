@@ -1,7 +1,9 @@
 package com.lekiosk.challenge.ui.home;
 
 import com.lekiosk.challenge.models.Utilisateur;
+
 import java.util.List;
+
 import retrofit2.Response;
 
 /**
@@ -14,10 +16,15 @@ public interface HomeContract {
     interface HomeModel{
 
         void getData(onFinishListener listener);
+        void getSqLiteData(SqliteListener listener);
 
         interface onFinishListener {
             void onSuccessResponse(Response<List<Utilisateur>> response);
             void onFailureResponse(Throwable throwable);
+        }
+
+        interface SqliteListener{
+            void onGetAll(List<Utilisateur> list);
         }
     }
 
@@ -35,5 +42,6 @@ public interface HomeContract {
 
     interface HomePresenter{
         void getDataFromServer();
+        void getOfflineData();
     }
 }
