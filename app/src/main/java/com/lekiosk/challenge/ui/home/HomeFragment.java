@@ -109,10 +109,13 @@ public class HomeFragment extends Fragment implements HomeContract.HomeView,
 
     @Override
     public void setDataToRecyclerView(List<Utilisateur> usersList) {
-        mAdapter = new UsersListAdapter(usersList, this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mUsersRecyClerView.setLayoutManager(linearLayoutManager);
-        mUsersRecyClerView.setAdapter(mAdapter);
+
+        if(usersList !=null){
+            mAdapter = new UsersListAdapter(usersList, this);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            mUsersRecyClerView.setLayoutManager(linearLayoutManager);
+            mUsersRecyClerView.setAdapter(mAdapter);
+        }
     }
 
     @Override

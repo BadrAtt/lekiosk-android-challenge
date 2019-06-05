@@ -39,4 +39,12 @@ public class Tache {
     public void setmCompleted(boolean mCompleted) {
         this.mCompleted = mCompleted;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tache tache = (Tache) o;
+        return mId == tache.mId;
+    }
 }

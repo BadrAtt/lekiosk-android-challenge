@@ -1,7 +1,6 @@
 package com.lekiosk.challenge.ui.tasks;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.lekiosk.challenge.App;
 import com.lekiosk.challenge.R;
 import com.lekiosk.challenge.models.Tache;
-import com.lekiosk.challenge.models.Utilisateur;
 
 import java.util.List;
 
@@ -76,7 +75,13 @@ public class TasksFragment extends Fragment implements TasksContract.TasksView, 
         super.onResume();
         initView(mParentView);
         mTasksPresenter = new TasksPresenter(this, new TasksModel());
-        mTasksPresenter.getUsersTasks(mUserId);
+
+        if(App.isConnected(App.getmAppContext())){
+            mTasksPresenter.getUsersTasks(mUserId);
+        }
+        else {
+            mTasksPresenter.getOfflineData(mUserId);
+        }
     }
 
     private void initView(View parent){
@@ -121,10 +126,13 @@ public class TasksFragment extends Fragment implements TasksContract.TasksView, 
 
     @Override
     public void setDataToRecyclerView(List<Tache> tasksList) {
-        mAdapter = new TasksListAdapter(tasksList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mTasksRecycler.setLayoutManager(linearLayoutManager);
-        mTasksRecycler.setAdapter(mAdapter);
+
+        if(tasksList !=null){
+            mAdapter = new TasksListAdapter(tasksList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            mTasksRecycler.setLayoutManager(linearLayoutManager);
+            mTasksRecycler.setAdapter(mAdapter);
+        }
     }
 
     @Override

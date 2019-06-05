@@ -1,7 +1,6 @@
 package com.lekiosk.challenge.ui.tasks;
 
 import com.lekiosk.challenge.models.Tache;
-import com.lekiosk.challenge.models.Utilisateur;
 
 import java.util.List;
 
@@ -17,9 +16,16 @@ public interface TasksContract {
     interface TasksModel{
 
         void getUserTasks(int id, OnFinishListener listener);
+
+        void getSqLiteData(int userId, TasksModel.SqliteListener listener);
+
         interface OnFinishListener {
             void onSuccessResponse(Response<List<Tache>> response);
             void onFailureResponse(Throwable throwable);
+        }
+
+        interface SqliteListener{
+            void onGetUserTasks(List<Tache> list);
         }
     }
 
@@ -33,5 +39,6 @@ public interface TasksContract {
 
     interface TasksPresenter{
         void getUsersTasks(int id);
+        void getOfflineData(int id);
     }
 }

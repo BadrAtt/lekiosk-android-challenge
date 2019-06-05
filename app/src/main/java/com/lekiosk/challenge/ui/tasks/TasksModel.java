@@ -45,4 +45,9 @@ public class TasksModel implements TasksContract.TasksModel {
             }
         });
     }
+
+    @Override
+    public void getSqLiteData(int userId, SqliteListener listener) {
+        listener.onGetUserTasks(DbClient.getmDbHelper().getUserTask(userId));
+    }
 }

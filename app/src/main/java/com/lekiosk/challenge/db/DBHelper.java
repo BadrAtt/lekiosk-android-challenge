@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
+import com.lekiosk.challenge.App;
 import com.lekiosk.challenge.models.Tache;
 import com.lekiosk.challenge.models.Utilisateur;
 
@@ -38,7 +40,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TASK_CULUMN_TASK_ID = "id";
     private static final String TASK_CULUMN_TASK_TITLE = "title";
     private static final String TASK_CULUMN_TASK_STATE = "state";
-    public static final String TASK_CULUMN_TASK_USER_ID = "user_id";
+    public static final String  TASK_CULUMN_TASK_USER_ID = "user_id";
 
 
     DBHelper(Context context) {
@@ -62,10 +64,10 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL(
                     "CREATE TABLE IF NOT EXISTS "
                             + USERS_TABLE_NAME + "("
-                            + USER_COLUMN_USER_ID + " INTEGER, "
+                            + USER_COLUMN_USER_ID + " INTEGER PRIMARY KEY, "
                             + USER_COLUMN_USER_NAME + " VARCHAR(20), "
                             + USER_COLUMN_USER_USERNAME + " VARCHAR(50), "
-                            + USER_COLUMN_USER_EMAIL + " INTEGER DEFAULT 0) "
+                            + USER_COLUMN_USER_EMAIL + " VARCHAR(50)) "
             );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,9 +79,10 @@ public class DBHelper extends SQLiteOpenHelper {
             db.execSQL(
                     "CREATE TABLE IF NOT EXISTS "
                             + TASKS_TABLE_NAME + "("
-                            + USER_COLUMN_USER_ID + " INTEGER, "
+                            + USER_COLUMN_USER_ID + " INTEGER PRIMARY KEY, "
                             + TASK_CULUMN_TASK_TITLE + " VARCHAR(20), "
-                            + TASK_CULUMN_TASK_STATE+ " BOOLEAN(50))"
+                            + TASK_CULUMN_TASK_STATE+ " INTEGER DEFAULT 0, "
+                            + TASK_CULUMN_TASK_USER_ID+ " INTEGER)"
             );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,7 +138,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Tache getUserTask(int userId) throws Resources.NotFoundException, NullPointerException {
+    public List<Tache> getUserTask(int userId) throws Resources.NotFoundException, NullPointerException {
         Cursor cursor = null;
         try {
             SQLiteDatabase db = this.getReadableDatabase();
@@ -143,21 +146,30 @@ public class DBHelper extends SQLiteOpenHelper {
                     "SELECT * FROM "
                             + TASKS_TABLE_NAME
                             + " WHERE "
-                            + USER_COLUMN_USER_ID
+                            + TASK_CULUMN_TASK_USER_ID
                             + " = ? ",
                     new String[]{userId + ""});
 
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
-                Tache tache = new Tache();
-                tache.setmId(cursor.getInt(cursor.getColumnIndex(TASK_CULUMN_TASK_ID)));
-                tache.setmTitle(cursor.getString(cursor.getColumnIndex(TASK_CULUMN_TASK_TITLE)));
-                tache.setmCompleted(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(TASK_CULUMN_TASK_STATE))));
+                List<Tache> userTasks = new ArrayList<>();
+                do{
+                    Tache tache = new Tache();
+                    tache.setmId(cursor.getInt(cursor.getColumnIndex(TASK_CULUMN_TASK_ID)));
+                    tache.setmTitle(cursor.getString(cursor.getColumnIndex(TASK_CULUMN_TASK_TITLE)));
+                    tache.setmCompleted(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(TASK_CULUMN_TASK_STATE))));
 
-                return tache;
+                    if(!userTasks.contains(tache)){
+                        userTasks.add(tache);
+                    }
+                }while (cursor.moveToNext());
+
+                return userTasks;
             } else {
-                throw new Resources.NotFoundException("User with id " + userId + " does not exists");
+                //throw new Resources.NotFoundException("User with id " + userId + " does not exists");
+                Toast.makeText(App.getmAppContext(), "User with id " + userId + " tasks is empty", Toast.LENGTH_SHORT).show();
             }
+            return  null;
         } catch (NullPointerException e) {
             e.printStackTrace();
             throw e;
@@ -169,11 +181,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertUserTask(Tache tache, int userId) throws Exception {
         try {
+
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
             contentValues.put(TASK_CULUMN_TASK_ID, tache.getmId());
             contentValues.put(TASK_CULUMN_TASK_TITLE, tache.getmTitle());
-            contentValues.put(TASK_CULUMN_TASK_STATE, tache.ismCompleted());
+            contentValues.put(TASK_CULUMN_TASK_STATE, tache.ismCompleted() ? 1 : 0);
             contentValues.put(TASK_CULUMN_TASK_USER_ID, userId);
             db.insert(TASKS_TABLE_NAME, null, contentValues);
         } catch (Exception e) {
@@ -212,8 +225,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 return allUsers;
 
             } else {
-                throw new Resources.NotFoundException("List of users is empty");
+                //throw new Resources.NotFoundException("List of users is empty");
+                Toast.makeText(App.getmAppContext(), "List of users is empty", Toast.LENGTH_SHORT).show();
             }
+            return null;
         } catch (NullPointerException e) {
             e.printStackTrace();
             throw e;
