@@ -21,6 +21,7 @@ import java.util.List;
  * on 04/06/2019.
  */
 
+//SqLite db helper class
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;

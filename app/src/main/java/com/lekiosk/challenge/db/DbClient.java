@@ -11,6 +11,7 @@ public class DbClient {
 
     private static DBHelper mDbHelper;
 
+    //get SqLiteDb helper Instance
     public static DBHelper getmDbHelper() {
 
         if(mDbHelper == null){

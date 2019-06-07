@@ -23,17 +23,17 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
         setContentView(R.layout.activity_base);
 
         mIsTablet = findViewById(R.id.layout_tab) !=null;
+
         if(mIsTablet){
-            initTabletView();
+            initTabletView(); // init the main view with the two panes
         }
         else {
-            initView();
+            initView(); // init the view with users list fragment
         }
 
         if (getCurrentFragment() != null) {
             //if screen rotated retain Fragment
             changeFragmentTo(getCurrentFragment(), getCurrentFragment().getTag());
-
         }
     }
 
@@ -42,6 +42,7 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
         super.onResume();
     }
 
+    //the tasks fragment is loaded until the users clicks on a user to see its tasks
     private void initTabletView(){
         homeFragment = HomeFragment.newInstance();
         getSupportFragmentManager()
@@ -88,6 +89,8 @@ public class BaseActivity extends AppCompatActivity implements HomeFragment.OnHo
                 .base_container);
     }
 
+    //whenever we rotate the screen android will set the fragment to the first one
+    //so we have to maintain the current fragment instance to avoid that
     public void changeFragmentTo(Fragment fragmentToLoad, String fragmentTag) {
 
         if (getSupportFragmentManager().findFragmentByTag(fragmentTag) == null) {

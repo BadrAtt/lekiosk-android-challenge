@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
  * on 04/06/2019.
  */
 
+//the Application class to maintain common objects shared in all the app
 public class App extends Application {
 
     private static Context mAppContext;
